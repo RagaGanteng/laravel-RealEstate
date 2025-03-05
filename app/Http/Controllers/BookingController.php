@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Booking;
+
+use App\Models\bookings;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,7 +16,7 @@ class BookingController extends Controller
      */
     public function index()
     {
-        $bookings = Booking::when(request()->search, function ($bookings) {
+        $bookings = bookings::when(request()->search, function ($bookings) {
             $bookings = $bookings->where('name', 'like', '%' . request()->search . '%');
         })->paginate(10);
 
@@ -44,7 +45,7 @@ class BookingController extends Controller
 
         try{
 
-        $booking = Booking::create([
+        $booking = bookings::create([
             'bookingDate' => $request->bookingDate,
             'roomId' => $request->roomId,
             'userId' => Auth::user()->id,
@@ -68,7 +69,7 @@ class BookingController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Booking $booking)
+    public function edit(bookings $booking)
     {
         $rooms = Room::all();
         return view('bookings.edit', compact('booking', 'rooms'));
@@ -85,7 +86,7 @@ class BookingController extends Controller
         ]);
 
         try {
-            $booking = Booking::find($id);
+            $booking = bookings::find($id);
             // dd($booking->first());
             $booking->bookingDate = $request->bookingDate;
             $booking->roomId = $request->roomId;
@@ -100,7 +101,7 @@ class BookingController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Booking $booking)
+    public function destroy(bookings $booking)
     {
         if ($booking) {
             $booking->delete();
@@ -114,7 +115,7 @@ class BookingController extends Controller
     public function approve($id)
     {
         try {
-            $booking = Booking::find($id);
+            $booking = bookings::find($id);
             $booking->status = "approved";
             $booking->save();
             return redirect()->route('rooms.index')
@@ -127,7 +128,7 @@ class BookingController extends Controller
     public function reject($id)
     {
         try {
-            $booking = Booking::find($id);
+            $booking = bookings::find($id);
             $booking->status = "rejected";
             $booking->save();
             return redirect()->route('rooms.index')

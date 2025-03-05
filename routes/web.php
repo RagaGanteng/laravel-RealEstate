@@ -25,7 +25,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/rooms/{id}/approve', [RoomController::class, 'approve'])->name('rooms.approve');
     Route::put('/rooms/{id}/reject', [RoomController::class, 'reject'])->name('rooms.reject');
 
-    Route::resource('bookings', BookingController::class);
+    Route::resource('/bookings', BookingController::class);
+    Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+
     
 });
 
